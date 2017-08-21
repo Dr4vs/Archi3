@@ -1,0 +1,155 @@
+######################
+## - Conky settings -  #
+######################
+update_interval 1
+background no
+
+imlib_cache_size 0
+double_buffer yes
+no_buffers yes
+
+## Window specifications ##
+own_window yes
+own_window_class Conky
+own_window_argb_visual yes
+own_window_type override
+own_window_transparent yes
+own_window_hints undecorated,sticky,below,skip_taskbar,skip_pager
+
+border_inner_margin 0
+border_outer_margin 0
+
+alignment top_right
+gap_x 20
+gap_y 10
+
+# Graphics settings #
+draw_shades yes
+draw_outline no
+draw_borders no
+draw_graph_borders no
+
+#####################
+## - Text settings - ##
+#####################
+use_xft yes
+xftfont Open Sans Light:size=6
+override_utf8_locale yes
+text_buffer_size 2048
+default_color white
+
+own_window_argb_value 0
+own_window_colour 000000
+minimum_size 200 0
+
+TEXT
+##Matera: 718113
+##Matera: ITXX0195
+##Torino: 20067238
+###################################################
+## clock and date
+###################################################
+${font Open Sans Light:size=50}${alignc}${time %k:%M}${font}
+${font Open Sans Light:size=30}${alignc}${time %A}${font}
+${font Open Sans Light:size=25}${alignc}${time %e} ${time %B}${font}
+
+###################################################
+# linux e uptime
+###################################################
+
+${voffset -20}${hr 1}${font}
+
+${font OpenLogos:size=25}B\
+${font}${goto 35}${voffset -25}Linux${alignr}${kernel}
+${goto 35}Uptime${alignr}${uptime_short}
+${goto 35}Processes: ${alignr}$processes ($running_processes running)
+${goto 35}GPU Temp: ${alignr}${color #FCAF3E}${exec nvidia-settings -q GPUCoreTemp | grep Attribute | cut -d ' ' -f 6 | cut -c 1-2} °C$color
+##################################################
+# CPU
+##################################################
+#${hr 1}
+${voffset 5}\
+${font Poky:size=20}P\
+${font}${voffset -15}${goto 35}CPU${goto 130}${freq_g (1)} GHz${alignr}${cpu cpu0}%
+${goto 35}${cpubar cpu0}
+${goto 32}CPU1: ${cpu cpu1}%${alignr}${color #FCAF3E}${execi 30 sensors | grep 'Core 0' | awk '{print $3}' | sed 's/+//' | sed 's/\.0//g'} °C$color
+${goto 32}CPU2: ${cpu cpu2}%${alignr}${color #FCAF3E}${execi 30 sensors | grep 'Core 1' | awk '{print $3}' | sed 's/+//' | sed 's/\.0//g'} °C$color
+${goto 32}CPU3: ${cpu cpu3}%${alignr}CPU4: ${cpu cpu4}%
+${goto 35}${top name 1}${alignr}${top cpu 1}%
+${goto 35}${top name 2}${alignr}${top cpu 2}%
+${goto 35}${top name 3}${alignr}${top cpu 3}%
+${goto 35}${top name 4}${alignr}${top cpu 4}%
+${goto 35}${top name 5}${alignr}${top cpu 5}%
+##################################################
+# RAM
+##################################################
+${voffset 5}\
+${font Poky:size=20}M\
+${font}${voffset -15}${goto 35}RAM${alignr}${mem}
+${goto 35}${membar}
+${goto 35}${top_mem name 1}${alignr}${top_mem mem_res 1}
+${goto 35}${top_mem name 2}${alignr}${top_mem mem_res 2}
+${goto 35}${top_mem name 3}${alignr}${top_mem mem_res 3}
+${goto 35}${top_mem name 4}${alignr}${top_mem mem_res 4}
+${goto 35}${top_mem name 5}${alignr}${top_mem mem_res 5}
+#############################
+##Battery
+############################
+${font Poky:size=20}R\
+${font}${voffset -15}${goto 35}BATTERY: ${alignr}${exec acpi | awk '{print $4}' | cut -c1-3}
+${goto 35}${execibar 30 acpi | awk '{print $4}' | tr -d '[=,=]'}
+##############################
+#### Disk Partitions Section
+################################
+${font Poky:size=20}y${font} ${voffset -5}File System${alignr}${fs_free /}/${fs_size /} 
+${goto 35}${fs_bar /}
+${font Poky:size=20}y${font} ${voffset -5}Home${alignr}${fs_free /home}/${fs_size /home} 
+${goto 35}${fs_bar /home}
+##########################################
+#SWAP
+##########################################
+${voffset 5}\
+${font ConkyColors:size=20}h\
+${font}${voffset -15}${goto 35}SWAP${alignr}${swapperc}%
+${goto 35}${swapbar}
+${goto 125}${swap}/${swapmax} 
+##################################################
+# network
+##################################################
+${if_existing /proc/net/route eth0}
+${voffset 5}\
+${font RaphaelIcons :size=25}Ü\
+${font}${voffset -15}${goto 35}Network${alignr}Cable
+${goto 35}${wireless_link_bar eth0}
+${goto 35}${font RaphaelIcons :size=25}n\
+${goto 125}m${font}\
+${voffset -15}\
+${goto 65}${upspeed eth0}/s\
+${goto 155}${downspeed eth0}/s
+${goto 65}${totalup eth0}\
+${goto 155}${totaldown eth0}
+${else}
+${if_existing /proc/net/route wlp4s0}
+${voffset -25}\
+${font RaphaelIcons :size=25}Ü\
+${font}${voffset -15}${goto 35}Network${alignr}Wi-Fi
+${goto 35}${wireless_link_bar wlp4s0}
+${goto 35}${font RaphaelIcons :size=25}n\
+${goto 125}m${font}\
+${voffset -15}\
+${goto 65}${upspeed wlp4s0}/s\
+${goto 155}${downspeed wlp4s0}/s
+${goto 65}${totalup wlp4s0}\
+${goto 155}${totaldown wlp4s0}
+${endif}
+${endif}
+#####################
+# compleanno e foto random
+#${if_match "${time %e} ${time %B}" == "9 febbraio"}
+#${image ~/Immagini/complex.png -p 100,600 -s 100x100}
+#$else\
+#${execi 600 bash ~/.conky/PhotoRandom}
+#${image /home/giovanni/Immagini/Fav/conkyPhoto.png -p -25,400}
+#${voffset 100}
+#${endif}
+
